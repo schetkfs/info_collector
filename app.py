@@ -156,9 +156,9 @@ def export_csv():
     si = io.StringIO()
     writer = csv.writer(si)
     writer.writerow([
-        'id', 'name', 'gender', 'contact', 'industry', 'job_role', 'preference_type',
-        'investment_preference', 'incubation_info', 'age', 'location', 'investment_experience',
-        'tech_adaptability', 'high_net_worth', 'expected_investment', 'ip', 'user_agent', 'created_at'
+        '编号', '姓名', '性别', '联系方式', '行业', '职务或角色', '投资偏好类型',
+        '投资偏好', '孵化产业及资金', '年龄', '地域', '投资经验',
+        '技术适应度', '高净值人群', '预期投资金额', 'IP', '设备信息', '提交时间'
     ])
     for x in Lead.query.order_by(Lead.created_at.desc()).all():
         writer.writerow([
