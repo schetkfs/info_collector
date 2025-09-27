@@ -139,7 +139,7 @@ FORM_TEMPLATE = BASE_CSS + """
     {% if msg %}
       <div class="footer">{{ msg }}</div>
     {% endif %}
-    <div class="footer">提交即表示同意我们对于数据使用的说明：仅用于业务沟通与画像分析，不会出售或泄露给第三方。</div>
+    <div class="footer">提交即表示同意我们对于数据使用的说明：仅用于业务沟通，不会出售或泄露给第三方。</div>
   </div>
 </div>
 """
