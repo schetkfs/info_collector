@@ -47,6 +47,14 @@ function nextStep(step) {
         if (!preference_type) valid = false;
         if (!valid) msg = '请填写完整第3页所有必填项';
         data = {step: 3, preference_type, investment_preference, incubation_info, investment_experience, tech_adaptability};
+    } else if (step === 5) {
+        // 第4页校验
+        let high_net_worth = document.getElementById('high_net_worth').value;
+        let expected_investment = document.getElementById('expected_investment').value.trim();
+        if (!high_net_worth) valid = false;
+        if (!expected_investment) valid = false;
+        if (!valid) msg = '请填写完整第4页所有必填项';
+        data = {step: 4, high_net_worth, expected_investment};
     }
     if (!valid) {
         showStepMsg(msg);
@@ -54,7 +62,7 @@ function nextStep(step) {
     }
     hideStepMsg();
     // AJAX提交本页数据
-    if (step <= 4) {
+    if (step <= 5) {
         fetch('/submit_step', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
