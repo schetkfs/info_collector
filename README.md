@@ -33,9 +33,33 @@ git push -u origin main
 
 
 
-git常用命令：
+**如何在github上配置，让服务器不输密码？**
+git config --global user.name "你的GitHub用户名"
+git config --global user.email "你的邮箱"ß
 
-git config --global user.email "you@example.com"
-git config --global user.name "Your Name
+一. 在服务器上生成 SSH key
+ssh-keygen -t ed25519 -C "1254965564@qq.com"
 
+二. 查看并复制公钥内容
+cat ~/.ssh/id_ed25519.pub
+复制输出的那一行（以 ssh-ed25519 或 ssh-rsa 开头，一串很长）。
+
+三. 添加 SSH key 到 GitHub
+1、登录你的 GitHub 账号
+2、点击右上角头像 > Settings
+3、左边菜单点 SSH and GPG keys
+4、点 New SSH key
+5、Title 随便填（比如 "server-2025"）
+6、Key 内容粘贴你刚刚复制的那一行
+7、点 Add SSH key
+
+
+下载代码：
+git clone git@github.com:schetkfs/info_collector.git
+
+cd /opt
+
+cd info_collector
+
+chmod +x deploy.sh
 
