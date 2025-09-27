@@ -9,8 +9,8 @@ EMAIL="1254965564@qq.com"         # 用于 Let's Encrypt；开启 HTTPS 时必�
 ENABLE_TLS=0                    # 0 仅 HTTP；1 同时签发 HTTPS 并自动跳转
 
 APP_USER="infoapp"
-APP_DIR="/opt/info-collector"
-SERVICE_NAME="info-collector"
+APP_DIR="/opt/info_collector"
+SERVICE_NAME="info_collector"
 APP_PORT="8000"
 
 ADMIN_USERNAME="admin"
