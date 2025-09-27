@@ -1,7 +1,7 @@
 
 import io, csv
 from flask import Flask, request, redirect, url_for, render_template, session, make_response
-from db import db, Lead, check_and_migrate_database, ensure_database_schema, migrate_database_runtime, database_path
+from db import db, check_and_migrate_database, ensure_database_schema, migrate_database_runtime, database_path
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{database_path}'
@@ -13,13 +13,14 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 # 绑定db到app
 db.init_app(app)
 
-# 启动时迁移和初始化数据库
+# 启动时迁移和初始化数据库（db初始化后再导入模型）
 with app.app_context():
+    from db import Lead
     check_and_migrate_database()
     db.create_all()
 
 ADMIN_USERNAME = 'admin'
-ADMIN_PASSWORD = 'changeme'
+ADMIN_PASSWORD = '123456'
 
 def get_client_ip():
     xff = request.headers.get('X-Forwarded-For', '')
