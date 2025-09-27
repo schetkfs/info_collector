@@ -3,16 +3,16 @@
 {% block title %}RWA投资与孵化信息采集{% endblock %}
 
 {% block content %}
-<div class="mobile-container">
-    <h2 style="color:#F3BA2F;">RWA信息采集表</h2>
+<div class="form-page">
+    <h2 class="form-title">RWA信息采集表</h2>
     {% if msg %}<div class="msg">{{ msg }}</div>{% endif %}
     <form method="post" action="/submit" autocomplete="off">
         <div class="form-group">
-            <label for="name">姓名 <span style="color:#F3BA2F">*</span></label>
-            <input type="text" id="name" name="name" maxlength="64" required placeholder="请输入姓名">
+            <label for="name"><span class="form-label-num">1.</span> <span class="form-label-main">姓名</span> <span class="form-label-required">*</span></label>
+            <input type="text" id="name" name="name" maxlength="64" required placeholder="输入姓名">
         </div>
         <div class="form-group">
-            <label for="gender">性别 <span style="color:#F3BA2F">*</span></label>
+            <label for="gender"><span class="form-label-num">2.</span> <span class="form-label-main">性别</span> <span class="form-label-required">*</span></label>
             <select id="gender" name="gender" required>
                 <option value="">请选择</option>
                 <option value="男">男</option>
@@ -21,19 +21,19 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="contact">联系方式 <span style="color:#F3BA2F">*</span></label>
-            <input type="text" id="contact" name="contact" maxlength="128" required placeholder="手机号/微信/邮箱等">
+            <label for="contact"><span class="form-label-num">3.</span> <span class="form-label-main">联系方式</span> <span class="form-label-required">*</span></label>
+            <input type="text" id="contact" name="contact" maxlength="128" required placeholder="输入联系方式">
         </div>
         <div class="form-group">
-            <label for="industry">主要从事行业 <span style="color:#F3BA2F">*</span></label>
-            <input type="text" id="industry" name="industry" maxlength="128" required placeholder="请输入行业">
+            <label for="industry"><span class="form-label-num">4.</span> <span class="form-label-main">主要从事行业</span> <span class="form-label-required">*</span></label>
+            <input type="text" id="industry" name="industry" maxlength="128" required placeholder="输入行业">
         </div>
         <div class="form-group">
-            <label for="job_role">职务或角色 <span style="color:#F3BA2F">*</span></label>
-            <input type="text" id="job_role" name="job_role" maxlength="128" required placeholder="请输入职务或角色">
+            <label for="job_role"><span class="form-label-num">5.</span> <span class="form-label-main">职务或角色</span> <span class="form-label-required">*</span></label>
+            <input type="text" id="job_role" name="job_role" maxlength="128" required placeholder="输入职务或角色">
         </div>
         <div class="form-group">
-            <label for="preference_type">投资偏好类型 <span style="color:#F3BA2F">*</span></label>
+            <label for="preference_type"><span class="form-label-num">6.</span> <span class="form-label-main">投资偏好类型</span> <span class="form-label-required">*</span></label>
             <select id="preference_type" name="preference_type" required>
                 <option value="">请选择</option>
                 <option value="RWA投资">RWA投资</option>
@@ -41,31 +41,31 @@
             </select>
         </div>
         <div class="form-group" id="investment_preference_group" style="display:none;">
-            <label for="investment_preference">投资偏好（RWA投资时必填）</label>
+            <label for="investment_preference"><span class="form-label-num">7.</span> <span class="form-label-main">投资偏好（RWA投资时必填）</span></label>
             <textarea id="investment_preference" name="investment_preference" rows="2" placeholder="请输入投资偏好"></textarea>
         </div>
         <div class="form-group" id="incubation_info_group" style="display:none;">
-            <label for="incubation_info">RWA孵化产业及参与资金（RWA孵化时必填）</label>
+            <label for="incubation_info"><span class="form-label-num">8.</span> <span class="form-label-main">RWA孵化产业及参与资金（RWA孵化时必填）</span></label>
             <textarea id="incubation_info" name="incubation_info" rows="2" placeholder="请输入孵化产业及资金"></textarea>
         </div>
         <div class="form-group">
-            <label for="age">年龄</label>
+            <label for="age"><span class="form-label-num">9.</span> <span class="form-label-main">年龄</span></label>
             <input type="number" id="age" name="age" min="0" max="120" placeholder="请输入年龄">
         </div>
         <div class="form-group">
-            <label for="location">目前所在地域</label>
+            <label for="location"><span class="form-label-num">10.</span> <span class="form-label-main">目前所在地域</span></label>
             <input type="text" id="location" name="location" maxlength="128" placeholder="请输入地域">
         </div>
         <div class="form-group">
-            <label for="investment_experience">投资经验</label>
+            <label for="investment_experience"><span class="form-label-num">11.</span> <span class="form-label-main">投资经验</span></label>
             <textarea id="investment_experience" name="investment_experience" rows="2" placeholder="请输入投资经验"></textarea>
         </div>
         <div class="form-group">
-            <label for="tech_adaptability">技术适应度</label>
+            <label for="tech_adaptability"><span class="form-label-num">12.</span> <span class="form-label-main">技术适应度</span></label>
             <input type="text" id="tech_adaptability" name="tech_adaptability" maxlength="64" placeholder="请输入技术适应度">
         </div>
         <div class="form-group">
-            <label for="high_net_worth">是否为高净值人群</label>
+            <label for="high_net_worth"><span class="form-label-num">13.</span> <span class="form-label-main">是否为高净值人群</span></label>
             <select id="high_net_worth" name="high_net_worth">
                 <option value="">请选择</option>
                 <option value="是">是</option>
@@ -73,58 +73,121 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="expected_investment">预期投资金额区间</label>
+            <label for="expected_investment"><span class="form-label-num">14.</span> <span class="form-label-main">预期投资金额区间</span></label>
             <input type="text" id="expected_investment" name="expected_investment" maxlength="64" placeholder="请输入金额区间">
         </div>
-        <button type="submit" style="background:#F3BA2F;color:#181A20;">提交信息</button>
+        <button type="submit">提交信息</button>
     </form>
-    <div class="footer" style="color:#F3BA2F;">提交即表示同意我们对于数据使用的说明：仅用于业务沟通与画像分析，不会出售或泄露给第三方。</div>
+    <div class="footer">提交即表示同意我们对于数据使用的说明：仅用于业务沟通与画像分析，不会出售或泄露给第三方。</div>
 </div>
 <style>
-body { background: #181A20 !important; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif; color: #F5F6FA; }
-.mobile-container {
-    max-width: 420px;
-    margin: 0 auto;
-    background: #23262F;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-    padding: 18px 12px 24px 12px;
+body {
+    background: #fff !important;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+    color: #222;
 }
-h2 { text-align: center; font-size: 1.3rem; margin: 18px 0 16px 0; color: #F3BA2F; }
-.form-group { margin-bottom: 16px; }
-label { font-size: 1rem; margin-bottom: 6px; display: block; color: #F5F6FA; }
+.form-page {
+    max-width: 520px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 24px 16px 32px 16px;
+}
+.form-title {
+    text-align: left;
+    font-size: 1.35rem;
+    margin: 10px 0 24px 0;
+    font-weight: bold;
+    color: #222;
+}
+.form-group {
+    margin-bottom: 32px;
+}
+label {
+    font-size: 1.08rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+    color: #222;
+}
+.form-label-num {
+    font-weight: bold;
+    margin-right: 4px;
+    color: #222;
+}
+.form-label-main {
+    font-weight: bold;
+    color: #222;
+}
+.form-label-required {
+    color: #E53935;
+    font-weight: bold;
+    margin-left: 4px;
+}
 input, select, textarea {
     width: 100%;
-    padding: 12px 10px;
+    padding: 14px 12px;
     border-radius: 8px;
-    border: 1px solid #393E46;
-    font-size: 1rem;
+    border: 1.5px solid #cfd8dc;
+    font-size: 1.05rem;
     box-sizing: border-box;
-    background: #181A20;
-    color: #F5F6FA;
+    background: #fff;
+    color: #222;
+    margin-top: 6px;
+    transition: border-color 0.2s;
+}
+input:focus, select:focus, textarea:focus {
+    border-color: #1976D2;
+    outline: none;
 }
 input::placeholder, textarea::placeholder {
-    color: #888;
+    color: #b0bec5;
 }
-select { background: #181A20; color: #F5F6FA; }
-textarea { resize: vertical; min-height: 40px; }
+select {
+    background: #fff;
+    color: #222;
+}
+textarea {
+    resize: vertical;
+    min-height: 40px;
+}
 button {
     width: 100%;
-    padding: 14px 0;
-    background: #F3BA2F;
-    color: #181A20;
+    padding: 16px 0;
+    background: #1976D2;
+    color: #fff;
     border: none;
     border-radius: 8px;
-    font-size: 1.1rem;
+    font-size: 1.12rem;
     font-weight: bold;
     margin-top: 10px;
-    box-shadow: 0 2px 6px rgba(243,186,47,0.12);
+    box-shadow: 0 2px 6px rgba(25,118,210,0.08);
+    cursor: pointer;
+    transition: background 0.2s;
 }
-button:active { background: #d9a520; }
-.msg { color: #F3BA2F; text-align: center; margin-bottom: 12px; font-size: 1rem; }
-.footer { color: #F3BA2F; text-align: center; margin-top: 18px; font-size: 0.95rem; }
-@media (max-width: 480px) {
-    .mobile-container { border-radius: 0; box-shadow: none; padding: 8px 2px 18px 2px; }
+button:active, button:focus {
+    background: #1565C0;
+}
+.msg {
+    color: #E53935;
+    text-align: center;
+    margin-bottom: 18px;
+    font-size: 1rem;
+}
+.footer {
+    color: #888;
+    text-align: center;
+    margin-top: 18px;
+    font-size: 0.95rem;
+}
+@media (max-width: 600px) {
+    .form-page {
+        border-radius: 0;
+        box-shadow: none;
+        padding: 8px 2px 18px 2px;
+    }
 }
 </style>
 <script>
