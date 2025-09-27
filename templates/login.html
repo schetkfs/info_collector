@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}管理员登录 - RWA投资与孵化信息采集{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="card">
+    <h1>管理员登录</h1>
+    <form method="post">
+      <label>用户名</label>
+      <input type="text" name="username" required>
+      <label>密码</label>
+      <input type="password" name="password" required>
+      <button class="btn" type="submit">登录</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}管理员后台 - RWA投资与孵化信息采集{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="topbar">
+    <h1>RWA投资与孵化信息采集后台</h1>
+    <div>
+      <a class="link" href="{{ url_for('export_csv') }}">导出 CSV</a>　|　
+      <a class="link" href="{{ url_for('logout') }}">退出</a>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sub">共 {{ total }} 条，当前第 {{ page }} / {{ pages }} 页</div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width:40px;">ID</th>
+          <th style="width:80px;">姓名</th>
+          <th style="width:60px;">性别</th>
+          <th style="width:120px;">联系方式</th>
+          <th style="width:100px;">行业</th>
+          <th style="width:100px;">职务角色</th>
+          <th style="width:80px;">投资偏好</th>
+          <th style="width:60px;">年龄</th>
+          <th style="width:80px;">地域</th>
+          <th style="width:100px;">来源 IP</th>
+          <th style="width:120px;">时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in items %}
+        <tr>
+          <td>{{ x.id }}</td>
+          <td>{{ x.name }}</td>
+          <td>{{ x.gender }}</td>
+          <td>{{ x.contact }}</td>
+          <td title="{{ x.industry }}">{{ x.industry[:10] }}{% if x.industry|length > 10 %}...{% endif %}</td>
+          <td title="{{ x.job_role }}">{{ x.job_role[:10] }}{% if x.job_role|length > 10 %}...{% endif %}</td>
+          <td>{{ x.preference_type }}</td>
+          <td>{{ x.age if x.age else '-' }}</td>
+          <td title="{{ x.location if x.location else '' }}">{{ x.location[:8] if x.location else '-' }}{% if x.location and x.location|length > 8 %}...{% endif %}</td>
+          <td>{{ x.ip }}</td>
+          <td>{{ x.created_at.strftime('%m-%d %H:%M') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="topbar">
+      <div>
+        {% if page > 1 %}<a class="link" href="{{ url_for('admin', page=page-1) }}">上一页</a>{% endif %}
+        {% if page < pages %}{% if page > 1 %} · {% endif %}<a class="link" href="{{ url_for('admin', page=page+1) }}">下一页</a>{% endif %}
+      </div>
+      <div>每页 20 条</div>
+    </div>
+    <div class="footer" style="margin-top:20px;color:#64748b;font-size:12px;">
+      提示：鼠标悬停在省略的内容上可查看完整信息。点击导出CSV可获取所有详细数据。
+    </div>
+  </div>
+</div>
+{% endblock %}

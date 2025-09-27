@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}RWA投资与孵化信息采集{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="card">
+    <h1>RWA投资与孵化信息采集</h1>
+    <div class="sub">请填写以下信息。仅用于内部分析，不对外公开。</div>
+    <form method="post" action="{{ url_for('submit') }}">
+      <!-- 基本信息（必填） -->
+      <h3>基本信息</h3>
+      
+      <label>姓名 <span class="badge">必填</span></label>
+      <input type="text" name="name" maxlength="64" placeholder="请输入姓名" required>
+
+      <label>性别 <span class="badge">必填</span></label>
+      <select name="gender" required>
+        <option value="">请选择</option>
+        <option value="男">男</option>
+        <option value="女">女</option>
+        <option value="其他">其他</option>
+      </select>
+
+      <label>联系方式 <span class="badge">必填</span></label>
+      <input type="text" name="contact" maxlength="128" placeholder="请输入手机号码或邮箱" required>
+
+      <!-- 职业信息（必填） -->
+      <h3>职业信息</h3>
+      
+      <label>主要从事行业 <span class="badge">必填</span></label>
+      <input type="text" name="industry" maxlength="128" placeholder="例如：金融、科技、制造业等" required>
+
+      <label>主要从事行业中的职务或角色 <span class="badge">必填</span></label>
+      <input type="text" name="job_role" maxlength="128" placeholder="例如：投资总监、产品经理、CEO等" required>
+
+      <!-- 偏好选择（必填） -->
+      <h3>投资偏好</h3>
+      
+      <label>更偏好投资（RWA投资）还是企业孵化（RWA孵化） <span class="badge">必填</span></label>
+      <select name="preference_type" id="preference_type" required>
+        <option value="">请选择</option>
+        <option value="RWA投资">RWA投资</option>
+        <option value="RWA孵化">RWA孵化</option>
+      </select>
+
+      <!-- RWA投资相关字段 -->
+      <div id="investment_fields" style="display:none;">
+        <label>投资偏好 <span class="badge">必填</span></label>
+        <textarea name="investment_preference" rows="3" placeholder="请描述您的投资偏好，如：短期收益、长期资产增值、风险对冲等"></textarea>
+      </div>
+
+      <!-- RWA孵化相关字段 -->
+      <div id="incubation_fields" style="display:none;">
+        <label>RWA孵化产业及参与资金 <span class="badge">必填</span></label>
+        <textarea name="incubation_info" rows="3" placeholder="请描述您感兴趣的RWA孵化产业及预期参与的资金规模"></textarea>
+      </div>
+
+      <!-- 选填信息 -->
+      <h3>补充信息（选填）</h3>
+      
+      <label>年龄 <span style="color:#94a3b8;">选填</span></label>
+      <input type="number" name="age" min="0" max="120" placeholder="例如：28">
+
+      <label>目前所在地域 <span style="color:#94a3b8;">选填</span></label>
+      <input type="text" name="location" maxlength="128" placeholder="例如：北京、上海、深圳等">
+
+      <label>投资经验 <span style="color:#94a3b8;">选填</span></label>
+      <textarea name="investment_experience" rows="3" placeholder="请简述您的投资经验和背景"></textarea>
+
+      <label>技术适应度 <span style="color:#94a3b8;">选填</span></label>
+      <select name="tech_adaptability">
+        <option value="">请选择</option>
+        <option value="完全不了解">完全不了解区块链、加密货币等新兴技术</option>
+        <option value="基础了解">对区块链、加密货币有基础了解</option>
+        <option value="有使用经验">有区块链、加密货币的使用经验</option>
+        <option value="深度参与">深度参与区块链、加密货币相关业务</option>
+      </select>
+
+      <label>是否为高净值人群 <span style="color:#94a3b8;">选填</span></label>
+      <select name="high_net_worth">
+        <option value="">请选择</option>
+        <option value="是">是</option>
+        <option value="否">否</option>
+        <option value="不便透露">不便透露</option>
+      </select>
+
+      <label>预期想用于投资理财RWA的金额区间 <span style="color:#94a3b8;">选填</span></label>
+      <select name="expected_investment">
+        <option value="">请选择</option>
+        <option value="1-10万">1-10万</option>
+        <option value="10-50万">10-50万</option>
+        <option value="50万以上">50万以上</option>
+        <option value="不确定">不确定</option>
+      </select>
+
+      <button class="btn" type="submit">提交</button>
+    </form>
+    {% if msg %}
+      <div class="footer">{{ msg }}</div>
+    {% endif %}
+    <div class="footer">提交即表示同意我们对于数据使用的说明：仅用于业务沟通与画像分析，不会出售或泄露给第三方。</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/form.js') }}"></script>
+{% endblock %}
