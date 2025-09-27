@@ -16,14 +16,14 @@ function nextStep(step) {
         if (!gender) valid = false;
         if (!/^\d{11}$/.test(contact)) {
             valid = false;
-            msg = '联系方式必须为11位数字';
+            msg = '请输入正确的联系方式';
         }
         // 年龄区间限制
         if (age) {
             let ageNum = parseInt(age);
             if (isNaN(ageNum) || ageNum < 10 || ageNum > 120) {
                 valid = false;
-                msg = '年龄必须在10-120之间';
+                msg = '请输入合理的年龄';
             }
         }
         if (!valid && !msg) msg = '请填写完整第1页所有必填项';
