@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="form-page">
-    <h2 class="form-title">RWA会议报名表</h2>
+    <h2 class="form-title">RWA会议报名表（大约需要1-3分钟）</h2>
     {% if msg %}<div class="msg">{{ msg }}</div>{% endif %}
     <form id="multiStepForm" method="post" action="/submit" autocomplete="off">
         <!-- 第1页 -->
@@ -223,10 +223,22 @@ button:active, button:focus {
             let gender = document.getElementById('gender').value;
             let age = document.getElementById('age').value.trim();
             let contact = document.getElementById('contact').value.trim();
+            // 联系方式必须为11位数字
             if (!name) valid = false;
             if (!gender) valid = false;
-            if (!contact) valid = false;
-            if (!valid) msg = '请填写完整第1页所有必填项';
+            if (!/^\d{11}$/.test(contact)) {
+                valid = false;
+                msg = '联系方式必须为11位数字';
+            }
+            // 年龄区间限制
+            if (age) {
+                let ageNum = parseInt(age);
+                if (isNaN(ageNum) || ageNum < 10 || ageNum > 120) {
+                    valid = false;
+                    msg = '年龄必须在10-120之间';
+                }
+            }
+            if (!valid && !msg) msg = '请填写完整第1页所有必填项';
             data = {step: 1, name, gender, age, contact};
         } else if (step === 3) {
             // 第2页校验
@@ -263,6 +275,10 @@ button:active, button:focus {
                 if (resp.success) {
                     for (let i = 1; i <= 4; i++) {
                         document.getElementById('step-' + i).style.display = (i === step) ? 'block' : 'none';
+                    }
+                    // 最后一步跳转
+                    if (resp.redirect) {
+                        window.location.href = resp.redirect;
                     }
                 } else {
                     showStepMsg(resp.msg || '提交失败，请重试');
