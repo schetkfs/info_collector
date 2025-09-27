@@ -1,46 +1,25 @@
-import os
-from datetime import datetime
-from flask import Flask, request, redirect, url_for, render_template, session, make_response
 
-from flask_sqlalchemy import SQLAlchemy
 import io, csv
+from flask import Flask, request, redirect, url_for, render_template, session, make_response
+from db import db, Lead, check_and_migrate_database, ensure_database_schema, migrate_database_runtime, database_path
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{database_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'please-change-me')
-
-# 根据环境变量决定是否仅在 HTTPS 下发送会话 cookie（0/1）
-app.config['SESSION_COOKIE_SECURE'] = os.environ.get('SESSION_COOKIE_SECURE', '0') == '1'
+app.config['SECRET_KEY'] = 'please-change-me'
+app.config['SESSION_COOKIE_SECURE'] = False
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
-db = SQLAlchemy(app)
+# 绑定db到app
+db.init_app(app)
 
-class Lead(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-    gender = db.Column(db.String(8), nullable=False)
-    contact = db.Column(db.String(128), nullable=False)  # 联系方式
-    industry = db.Column(db.String(128), nullable=False)  # 主要从事行业
-    job_role = db.Column(db.String(128), nullable=False)  # 主要从事行业中的职务或角色
-    preference_type = db.Column(db.String(32), nullable=False)  # RWA投资或RWA孵化
-    investment_preference = db.Column(db.Text)  # 投资偏好（RWA投资时必填）
-    incubation_info = db.Column(db.Text)  # RWA孵化产业及参与资金（RWA孵化时必填）
-    age = db.Column(db.Integer)  # 年龄（选填）
-    location = db.Column(db.String(128))  # 目前所在地域（选填）
-    investment_experience = db.Column(db.Text)  # 投资经验（选填）
-    tech_adaptability = db.Column(db.String(64))  # 技术适应度（选填）
-    high_net_worth = db.Column(db.String(16))  # 是否为高净值人群（选填）
-    expected_investment = db.Column(db.String(64))  # 预期投资金额区间（选填）
-    ip = db.Column(db.String(64))
-    user_agent = db.Column(db.String(256))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-
+# 启动时迁移和初始化数据库
 with app.app_context():
+    check_and_migrate_database()
     db.create_all()
 
-ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
-ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'changeme')
+ADMIN_USERNAME = 'admin'
+ADMIN_PASSWORD = 'changeme'
 
 def get_client_ip():
     xff = request.headers.get('X-Forwarded-For', '')
@@ -154,42 +133,45 @@ def logout():
 def admin():
     if not logged_in():
         return redirect(url_for('login'))
-    page = max(int(request.args.get('page', 1)), 1)
-    per_page = 20
-    q = Lead.query.order_by(Lead.created_at.desc())
-    total = q.count()
-    items = q.offset((page-1)*per_page).limit(per_page).all()
-    pages = (total + per_page - 1) // per_page
-    return render_template('admin.html', items=items, total=total, page=page, pages=pages)
+    try:
+        # 运行时检查和修复数据库结构
+        if not ensure_database_schema(db):
+            return "<h1>数据库维护中...</h1><p>数据库结构正在更新，请稍后刷新页面。</p>", 503
+        page = max(int(request.args.get('page', 1)), 1)
+        per_page = 20
+        q = Lead.query.order_by(Lead.created_at.desc())
+        total = q.count()
+        items = q.offset((page-1)*per_page).limit(per_page).all()
+        pages = (total + per_page - 1) // per_page
+        return render_template('admin.html', items=items, total=total, page=page, pages=pages)
+    except Exception as e:
+        print(f"❌ 管理页面出错: {e}")
+        return f"<h1>管理页面错误</h1><p>{e}</p><p><a href='/admin/fix-db'>尝试修复数据库</a></p>", 500
 
 @app.route('/admin/export.csv')
-def export_csv():
+@app.route('/admin/fix-db')
+def fix_database():
     if not logged_in():
         return redirect(url_for('login'))
-    si = io.StringIO()
-    writer = csv.writer(si)
-    writer.writerow([
-        'id', 'name', 'gender', 'contact', 'industry', 'job_role', 'preference_type',
-        'investment_preference', 'incubation_info', 'age', 'location', 'investment_experience',
-        'tech_adaptability', 'high_net_worth', 'expected_investment', 'ip', 'user_agent', 'created_at'
-    ])
-    for x in Lead.query.order_by(Lead.created_at.desc()).all():
-        writer.writerow([
-            x.id, x.name, x.gender, x.contact, x.industry, x.job_role, x.preference_type,
-            x.investment_preference or '', x.incubation_info or '', x.age or '',
-            x.location or '', x.investment_experience or '', x.tech_adaptability or '',
-            x.high_net_worth or '', x.expected_investment or '', x.ip,
-            x.user_agent, x.created_at.isoformat(sep=' ', timespec='seconds')
-        ])
-    data = si.getvalue().encode('utf-8-sig')
-    resp = make_response(data)
-    resp.headers['Content-Type'] = 'text/csv; charset=utf-8'
-    resp.headers['Content-Disposition'] = 'attachment; filename=rwa_leads.csv'
-    return resp
-
-@app.route('/healthz')
-def healthz():
-    return 'ok', 200
-
-if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8000)
+    try:
+        print("🔧 开始手动数据库修复...")
+        result = db.session.execute(db.text("PRAGMA table_info(lead);")).fetchall()
+        current_columns = [row[1] for row in result]
+        html_output = f"""
+        <html>
+        <head><title>数据库修复工具</title></head>
+        <body>
+        <h1>数据库修复工具</h1>
+        <h2>当前表结构</h2>
+        <p>现有列: {', '.join(current_columns)}</p>
+        """
+        # 直接调用迁移函数
+        migrate_database_runtime(db)
+        html_output += "<h2>已尝试修复数据库结构，请返回后台刷新页面。</h2>"
+        html_output += "<p><a href='/admin'>返回管理后台</a></p>"
+        html_output += "</body></html>"
+        print("🎉 手动数据库修复完成")
+        return html_output
+    except Exception as e:
+        print(f"❌ 手动修复失败: {e}")
+        return f"<h1>数据库修复失败</h1><p>{str(e)}</p><p><a href='/admin'>返回管理后台</a></p>", 500
