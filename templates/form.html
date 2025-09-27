@@ -4,15 +4,15 @@
 
 {% block content %}
 <div class="mobile-container">
-    <h2>RWA信息采集表</h2>
+    <h2 style="color:#F3BA2F;">RWA信息采集表</h2>
     {% if msg %}<div class="msg">{{ msg }}</div>{% endif %}
     <form method="post" action="/submit" autocomplete="off">
         <div class="form-group">
-            <label for="name">姓名 <span style="color:#d9534f">*</span></label>
+            <label for="name">姓名 <span style="color:#F3BA2F">*</span></label>
             <input type="text" id="name" name="name" maxlength="64" required placeholder="请输入姓名">
         </div>
         <div class="form-group">
-            <label for="gender">性别 <span style="color:#d9534f">*</span></label>
+            <label for="gender">性别 <span style="color:#F3BA2F">*</span></label>
             <select id="gender" name="gender" required>
                 <option value="">请选择</option>
                 <option value="男">男</option>
@@ -21,19 +21,19 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="contact">联系方式 <span style="color:#d9534f">*</span></label>
+            <label for="contact">联系方式 <span style="color:#F3BA2F">*</span></label>
             <input type="text" id="contact" name="contact" maxlength="128" required placeholder="手机号/微信/邮箱等">
         </div>
         <div class="form-group">
-            <label for="industry">主要从事行业 <span style="color:#d9534f">*</span></label>
+            <label for="industry">主要从事行业 <span style="color:#F3BA2F">*</span></label>
             <input type="text" id="industry" name="industry" maxlength="128" required placeholder="请输入行业">
         </div>
         <div class="form-group">
-            <label for="job_role">职务或角色 <span style="color:#d9534f">*</span></label>
+            <label for="job_role">职务或角色 <span style="color:#F3BA2F">*</span></label>
             <input type="text" id="job_role" name="job_role" maxlength="128" required placeholder="请输入职务或角色">
         </div>
         <div class="form-group">
-            <label for="preference_type">投资偏好类型 <span style="color:#d9534f">*</span></label>
+            <label for="preference_type">投资偏好类型 <span style="color:#F3BA2F">*</span></label>
             <select id="preference_type" name="preference_type" required>
                 <option value="">请选择</option>
                 <option value="RWA投资">RWA投资</option>
@@ -76,10 +76,57 @@
             <label for="expected_investment">预期投资金额区间</label>
             <input type="text" id="expected_investment" name="expected_investment" maxlength="64" placeholder="请输入金额区间">
         </div>
-        <button type="submit">提交信息</button>
+        <button type="submit" style="background:#F3BA2F;color:#181A20;">提交信息</button>
     </form>
-    <div class="footer">提交即表示同意我们对于数据使用的说明：仅用于业务沟通与画像分析，不会出售或泄露给第三方。</div>
+    <div class="footer" style="color:#F3BA2F;">提交即表示同意我们对于数据使用的说明：仅用于业务沟通与画像分析，不会出售或泄露给第三方。</div>
 </div>
+<style>
+body { background: #181A20 !important; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif; color: #F5F6FA; }
+.mobile-container {
+    max-width: 420px;
+    margin: 0 auto;
+    background: #23262F;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    padding: 18px 12px 24px 12px;
+}
+h2 { text-align: center; font-size: 1.3rem; margin: 18px 0 16px 0; color: #F3BA2F; }
+.form-group { margin-bottom: 16px; }
+label { font-size: 1rem; margin-bottom: 6px; display: block; color: #F5F6FA; }
+input, select, textarea {
+    width: 100%;
+    padding: 12px 10px;
+    border-radius: 8px;
+    border: 1px solid #393E46;
+    font-size: 1rem;
+    box-sizing: border-box;
+    background: #181A20;
+    color: #F5F6FA;
+}
+input::placeholder, textarea::placeholder {
+    color: #888;
+}
+select { background: #181A20; color: #F5F6FA; }
+textarea { resize: vertical; min-height: 40px; }
+button {
+    width: 100%;
+    padding: 14px 0;
+    background: #F3BA2F;
+    color: #181A20;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-top: 10px;
+    box-shadow: 0 2px 6px rgba(243,186,47,0.12);
+}
+button:active { background: #d9a520; }
+.msg { color: #F3BA2F; text-align: center; margin-bottom: 12px; font-size: 1rem; }
+.footer { color: #F3BA2F; text-align: center; margin-top: 18px; font-size: 0.95rem; }
+@media (max-width: 480px) {
+    .mobile-container { border-radius: 0; box-shadow: none; padding: 8px 2px 18px 2px; }
+}
+</style>
 <script>
     // 移动端表单逻辑
     document.getElementById('preference_type').addEventListener('change', function() {
