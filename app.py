@@ -149,7 +149,32 @@ def admin():
         print(f"❌ 管理页面出错: {e}")
         return f"<h1>管理页面错误</h1><p>{e}</p><p><a href='/admin/fix-db'>尝试修复数据库</a></p>", 500
 
+
 @app.route('/admin/export.csv')
+def export_csv():
+    if not logged_in():
+        return redirect(url_for('login'))
+    si = io.StringIO()
+    writer = csv.writer(si)
+    writer.writerow([
+        'id', 'name', 'gender', 'contact', 'industry', 'job_role', 'preference_type',
+        'investment_preference', 'incubation_info', 'age', 'location', 'investment_experience',
+        'tech_adaptability', 'high_net_worth', 'expected_investment', 'ip', 'user_agent', 'created_at'
+    ])
+    for x in db.session.query(db.Model).filter_by(__tablename__='lead').order_by(getattr(x, 'created_at').desc()):
+        writer.writerow([
+            x.id, x.name, x.gender, x.contact, x.industry, x.job_role, x.preference_type,
+            x.investment_preference or '', x.incubation_info or '', x.age or '',
+            x.location or '', x.investment_experience or '', x.tech_adaptability or '',
+            x.high_net_worth or '', x.expected_investment or '', x.ip,
+            x.user_agent, x.created_at.isoformat(sep=' ', timespec='seconds')
+        ])
+    data = si.getvalue().encode('utf-8-sig')
+    resp = make_response(data)
+    resp.headers['Content-Type'] = 'text/csv; charset=utf-8'
+    resp.headers['Content-Disposition'] = 'attachment; filename=rwa_leads.csv'
+    return resp
+
 @app.route('/admin/fix-db')
 def fix_database():
     if not logged_in():
@@ -166,7 +191,6 @@ def fix_database():
         <h2>当前表结构</h2>
         <p>现有列: {', '.join(current_columns)}</p>
         """
-        # 直接调用迁移函数
         migrate_database_runtime(db)
         html_output += "<h2>已尝试修复数据库结构，请返回后台刷新页面。</h2>"
         html_output += "<p><a href='/admin'>返回管理后台</a></p>"
