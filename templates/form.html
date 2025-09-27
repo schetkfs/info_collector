@@ -6,77 +6,92 @@
 <div class="form-page">
     <h2 class="form-title">RWA会议报名表</h2>
     {% if msg %}<div class="msg">{{ msg }}</div>{% endif %}
-    <form method="post" action="/submit" autocomplete="off">
-        <div class="form-group">
-            <label for="name"><span class="form-label-num">1.</span> <span class="form-label-main">姓名</span> <span class="form-label-required">*</span></label>
-            <input type="text" id="name" name="name" maxlength="64" required placeholder="输入姓名">
+    <form id="multiStepForm" method="post" action="/submit" autocomplete="off">
+        <!-- 第1页 -->
+        <div class="form-step" id="step-1">
+            <div class="form-group">
+                <label for="name"><span class="form-label-num">1.</span> <span class="form-label-main">姓名</span> <span class="form-label-required">*</span></label>
+                <input type="text" id="name" name="name" maxlength="64" required placeholder="输入姓名">
+            </div>
+            <div class="form-group">
+                <label for="gender"><span class="form-label-num">2.</span> <span class="form-label-main">性别</span> <span class="form-label-required">*</span></label>
+                <select id="gender" name="gender" required>
+                    <option value="">请选择</option>
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="age"><span class="form-label-num">3.</span> <span class="form-label-main">年龄</span></label>
+                <input type="number" id="age" name="age" min="0" max="120" placeholder="请输入年龄">
+            </div>
+            <div class="form-group">
+                <label for="contact"><span class="form-label-num">4.</span> <span class="form-label-main">联系方式</span> <span class="form-label-required">*</span></label>
+                <input type="text" id="contact" name="contact" maxlength="128" required placeholder="输入联系方式">
+            </div>
+            <button type="button" class="btn" onclick="nextStep(2)">下一页</button>
         </div>
-        <div class="form-group">
-            <label for="gender"><span class="form-label-num">2.</span> <span class="form-label-main">性别</span> <span class="form-label-required">*</span></label>
-            <select id="gender" name="gender" required>
-                <option value="">请选择</option>
-                <option value="男">男</option>
-                <option value="女">女</option>
-                <option value="其他">其他</option>
-            </select>
+        <!-- 第2页 -->
+        <div class="form-step" id="step-2" style="display:none;">
+            <div class="form-group">
+                <label for="location"><span class="form-label-num">5.</span> <span class="form-label-main">目前所在地域</span></label>
+                <input type="text" id="location" name="location" maxlength="128" placeholder="请输入地域">
+            </div>
+            <div class="form-group">
+                <label for="industry"><span class="form-label-num">6.</span> <span class="form-label-main">主要从事行业</span> <span class="form-label-required">*</span></label>
+                <input type="text" id="industry" name="industry" maxlength="128" required placeholder="输入行业">
+            </div>
+            <div class="form-group">
+                <label for="job_role"><span class="form-label-num">7.</span> <span class="form-label-main">职务或角色</span> <span class="form-label-required">*</span></label>
+                <input type="text" id="job_role" name="job_role" maxlength="128" required placeholder="输入职务或角色">
+            </div>
+            <button type="button" class="btn" onclick="nextStep(3)">下一页</button>
         </div>
-        <div class="form-group">
-            <label for="contact"><span class="form-label-num">3.</span> <span class="form-label-main">联系方式</span> <span class="form-label-required">*</span></label>
-            <input type="text" id="contact" name="contact" maxlength="128" required placeholder="输入联系方式">
+        <!-- 第3页 -->
+        <div class="form-step" id="step-3" style="display:none;">
+            <div class="form-group">
+                <label for="preference_type"><span class="form-label-num">8.</span> <span class="form-label-main">投资偏好类型</span> <span class="form-label-required">*</span></label>
+                <select id="preference_type" name="preference_type" required>
+                    <option value="">请选择</option>
+                    <option value="RWA投资">RWA投资</option>
+                    <option value="RWA孵化">RWA孵化</option>
+                </select>
+            </div>
+            <div class="form-group" id="investment_preference_group" style="display:none;">
+                <label for="investment_preference"><span class="form-label-num">9.</span> <span class="form-label-main">投资偏好（RWA投资时必填）</span></label>
+                <textarea id="investment_preference" name="investment_preference" rows="2" placeholder="请输入投资偏好"></textarea>
+            </div>
+            <div class="form-group" id="incubation_info_group" style="display:none;">
+                <label for="incubation_info"><span class="form-label-num">10.</span> <span class="form-label-main">RWA孵化产业及参与资金（RWA孵化时必填）</span></label>
+                <textarea id="incubation_info" name="incubation_info" rows="2" placeholder="请输入孵化产业及资金"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="investment_experience"><span class="form-label-num">11.</span> <span class="form-label-main">投资经验</span></label>
+                <textarea id="investment_experience" name="investment_experience" rows="2" placeholder="请输入投资经验"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="tech_adaptability"><span class="form-label-num">12.</span> <span class="form-label-main">技术适应度</span></label>
+                <input type="text" id="tech_adaptability" name="tech_adaptability" maxlength="64" placeholder="请输入技术适应度">
+            </div>
+            <button type="button" class="btn" onclick="nextStep(4)">下一页</button>
         </div>
-        <div class="form-group">
-            <label for="industry"><span class="form-label-num">4.</span> <span class="form-label-main">主要从事行业</span> <span class="form-label-required">*</span></label>
-            <input type="text" id="industry" name="industry" maxlength="128" required placeholder="输入行业">
+        <!-- 第4页 -->
+        <div class="form-step" id="step-4" style="display:none;">
+            <div class="form-group">
+                <label for="high_net_worth"><span class="form-label-num">13.</span> <span class="form-label-main">是否为高净值人群</span></label>
+                <select id="high_net_worth" name="high_net_worth">
+                    <option value="">请选择</option>
+                    <option value="是">是</option>
+                    <option value="否">否</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="expected_investment"><span class="form-label-num">14.</span> <span class="form-label-main">预期投资金额区间</span></label>
+                <input type="text" id="expected_investment" name="expected_investment" maxlength="64" placeholder="请输入金额区间">
+            </div>
+            <button type="submit" class="btn">提交信息</button>
         </div>
-        <div class="form-group">
-            <label for="job_role"><span class="form-label-num">5.</span> <span class="form-label-main">职务或角色</span> <span class="form-label-required">*</span></label>
-            <input type="text" id="job_role" name="job_role" maxlength="128" required placeholder="输入职务或角色">
-        </div>
-        <div class="form-group">
-            <label for="preference_type"><span class="form-label-num">6.</span> <span class="form-label-main">投资偏好类型</span> <span class="form-label-required">*</span></label>
-            <select id="preference_type" name="preference_type" required>
-                <option value="">请选择</option>
-                <option value="RWA投资">RWA投资</option>
-                <option value="RWA孵化">RWA孵化</option>
-            </select>
-        </div>
-        <div class="form-group" id="investment_preference_group" style="display:none;">
-            <label for="investment_preference"><span class="form-label-num">7.</span> <span class="form-label-main">投资偏好（RWA投资时必填）</span></label>
-            <textarea id="investment_preference" name="investment_preference" rows="2" placeholder="请输入投资偏好"></textarea>
-        </div>
-        <div class="form-group" id="incubation_info_group" style="display:none;">
-            <label for="incubation_info"><span class="form-label-num">8.</span> <span class="form-label-main">RWA孵化产业及参与资金（RWA孵化时必填）</span></label>
-            <textarea id="incubation_info" name="incubation_info" rows="2" placeholder="请输入孵化产业及资金"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="age"><span class="form-label-num">9.</span> <span class="form-label-main">年龄</span></label>
-            <input type="number" id="age" name="age" min="0" max="120" placeholder="请输入年龄">
-        </div>
-        <div class="form-group">
-            <label for="location"><span class="form-label-num">10.</span> <span class="form-label-main">目前所在地域</span></label>
-            <input type="text" id="location" name="location" maxlength="128" placeholder="请输入地域">
-        </div>
-        <div class="form-group">
-            <label for="investment_experience"><span class="form-label-num">11.</span> <span class="form-label-main">投资经验</span></label>
-            <textarea id="investment_experience" name="investment_experience" rows="2" placeholder="请输入投资经验"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="tech_adaptability"><span class="form-label-num">12.</span> <span class="form-label-main">技术适应度</span></label>
-            <input type="text" id="tech_adaptability" name="tech_adaptability" maxlength="64" placeholder="请输入技术适应度">
-        </div>
-        <div class="form-group">
-            <label for="high_net_worth"><span class="form-label-num">13.</span> <span class="form-label-main">是否为高净值人群</span></label>
-            <select id="high_net_worth" name="high_net_worth">
-                <option value="">请选择</option>
-                <option value="是">是</option>
-                <option value="否">否</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="expected_investment"><span class="form-label-num">14.</span> <span class="form-label-main">预期投资金额区间</span></label>
-            <input type="text" id="expected_investment" name="expected_investment" maxlength="64" placeholder="请输入金额区间">
-        </div>
-        <button type="submit">提交信息</button>
     </form>
     <div class="footer">提交即表示同意我们对于数据使用的说明：仅用于业务沟通与画像分析，不会出售或泄露给第三方。</div>
 </div>
@@ -195,6 +210,13 @@ button:active, button:focus {
 </style>
 <script>
     // 移动端表单逻辑
+    // 多页表单逻辑
+    function nextStep(step) {
+        for (let i = 1; i <= 4; i++) {
+            document.getElementById('step-' + i).style.display = (i === step) ? 'block' : 'none';
+        }
+    }
+    // 投资偏好类型联动
     document.getElementById('preference_type').addEventListener('change', function() {
         var type = this.value;
         document.getElementById('investment_preference_group').style.display = (type === 'RWA投资') ? 'block' : 'none';
