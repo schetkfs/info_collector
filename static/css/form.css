@@ -88,7 +88,7 @@ button {
     transition: background 0.2s;
 }
 button:active, button:focus {
-    background: #1565C0;
+    background: #1976D2;
 }
 .msg {
     color: #E53935;
