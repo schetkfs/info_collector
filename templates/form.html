@@ -215,32 +215,61 @@ button:active, button:focus {
         // 校验当前页必填项
         let valid = true;
         let msg = '';
+        let data = {};
+        let currentStep = step - 1;
         if (step === 2) {
             // 第1页校验
-            if (!document.getElementById('name').value.trim()) valid = false;
-            if (!document.getElementById('gender').value) valid = false;
-            if (!document.getElementById('contact').value.trim()) valid = false;
-            // 年龄非必填
+            let name = document.getElementById('name').value.trim();
+            let gender = document.getElementById('gender').value;
+            let age = document.getElementById('age').value.trim();
+            let contact = document.getElementById('contact').value.trim();
+            if (!name) valid = false;
+            if (!gender) valid = false;
+            if (!contact) valid = false;
             if (!valid) msg = '请填写完整第1页所有必填项';
+            data = {step: 1, name, gender, age, contact};
         } else if (step === 3) {
             // 第2页校验
-            if (!document.getElementById('industry').value.trim()) valid = false;
-            if (!document.getElementById('job_role').value.trim()) valid = false;
-            // 地域非必填
+            let location = document.getElementById('location').value.trim();
+            let industry = document.getElementById('industry').value.trim();
+            let job_role = document.getElementById('job_role').value.trim();
+            if (!industry) valid = false;
+            if (!job_role) valid = false;
             if (!valid) msg = '请填写完整第2页所有必填项';
+            data = {step: 2, location, industry, job_role};
         } else if (step === 4) {
             // 第3页校验
-            if (!document.getElementById('preference_type').value) valid = false;
-            // 经验、技术适应度非必填
+            let preference_type = document.getElementById('preference_type').value;
+            let investment_preference = document.getElementById('investment_preference').value.trim();
+            let incubation_info = document.getElementById('incubation_info').value.trim();
+            let investment_experience = document.getElementById('investment_experience').value.trim();
+            let tech_adaptability = document.getElementById('tech_adaptability').value.trim();
+            if (!preference_type) valid = false;
             if (!valid) msg = '请填写完整第3页所有必填项';
+            data = {step: 3, preference_type, investment_preference, incubation_info, investment_experience, tech_adaptability};
         }
         if (!valid) {
             showStepMsg(msg);
             return;
         }
         hideStepMsg();
-        for (let i = 1; i <= 4; i++) {
-            document.getElementById('step-' + i).style.display = (i === step) ? 'block' : 'none';
+        // AJAX提交本页数据
+        if (step <= 4) {
+            fetch('/submit_step', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            }).then(res => res.json()).then(resp => {
+                if (resp.success) {
+                    for (let i = 1; i <= 4; i++) {
+                        document.getElementById('step-' + i).style.display = (i === step) ? 'block' : 'none';
+                    }
+                } else {
+                    showStepMsg(resp.msg || '提交失败，请重试');
+                }
+            }).catch(() => {
+                showStepMsg('网络错误，请重试');
+            });
         }
     }
 
