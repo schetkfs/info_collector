@@ -212,9 +212,52 @@ button:active, button:focus {
     // 移动端表单逻辑
     // 多页表单逻辑
     function nextStep(step) {
+        // 校验当前页必填项
+        let valid = true;
+        let msg = '';
+        if (step === 2) {
+            // 第1页校验
+            if (!document.getElementById('name').value.trim()) valid = false;
+            if (!document.getElementById('gender').value) valid = false;
+            if (!document.getElementById('contact').value.trim()) valid = false;
+            // 年龄非必填
+            if (!valid) msg = '请填写完整第1页所有必填项';
+        } else if (step === 3) {
+            // 第2页校验
+            if (!document.getElementById('industry').value.trim()) valid = false;
+            if (!document.getElementById('job_role').value.trim()) valid = false;
+            // 地域非必填
+            if (!valid) msg = '请填写完整第2页所有必填项';
+        } else if (step === 4) {
+            // 第3页校验
+            if (!document.getElementById('preference_type').value) valid = false;
+            // 经验、技术适应度非必填
+            if (!valid) msg = '请填写完整第3页所有必填项';
+        }
+        if (!valid) {
+            showStepMsg(msg);
+            return;
+        }
+        hideStepMsg();
         for (let i = 1; i <= 4; i++) {
             document.getElementById('step-' + i).style.display = (i === step) ? 'block' : 'none';
         }
+    }
+
+    // 显示每页校验提示
+    function showStepMsg(msg) {
+        let msgDiv = document.getElementById('step-msg');
+        if (!msgDiv) {
+            msgDiv = document.createElement('div');
+            msgDiv.id = 'step-msg';
+            msgDiv.className = 'msg';
+            document.querySelector('.form-page').insertBefore(msgDiv, document.querySelector('.form-page').children[1]);
+        }
+        msgDiv.innerText = msg;
+    }
+    function hideStepMsg() {
+        let msgDiv = document.getElementById('step-msg');
+        if (msgDiv) msgDiv.innerText = '';
     }
     // 投资偏好类型联动
     document.getElementById('preference_type').addEventListener('change', function() {
