@@ -95,6 +95,10 @@ def submit_step():
     if int(step) == 4:
         lead.high_net_worth = data.get('high_net_worth', '')
         lead.expected_investment = data.get('expected_investment', '')
+        db.session.commit()
+        # 清理session，跳转到成功页面
+        session.pop('lead_id', None)
+        return jsonify(success=True, redirect=url_for('success'))
     db.session.commit()
     return jsonify(success=True)
 
@@ -104,85 +108,10 @@ def index():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    # 基本信息（必填）
-    name = (request.form.get('name') or '').strip()
-    gender = (request.form.get('gender') or '').strip()
-    contact = (request.form.get('contact') or '').strip()
-    
-    # 职业信息（必填）
-    industry = (request.form.get('industry') or '').strip()
-    job_role = (request.form.get('job_role') or '').strip()
-    
-    # 投资偏好（必填）
-    preference_type = (request.form.get('preference_type') or '').strip()
-    investment_preference = (request.form.get('investment_preference') or '').strip()
-    incubation_info = (request.form.get('incubation_info') or '').strip()
-    
-    # 选填信息
-    age_raw = (request.form.get('age') or '').strip()
-    location = (request.form.get('location') or '').strip()
-    investment_experience = (request.form.get('investment_experience') or '').strip()
-    tech_adaptability = (request.form.get('tech_adaptability') or '').strip()
-    high_net_worth = (request.form.get('high_net_worth') or '').strip()
-    expected_investment = (request.form.get('expected_investment') or '').strip()
-
-    # 验证必填字段
-    if not name or len(name) > 64:
-        return render_template('form.html', msg="姓名必填，且不超过 64 字符")
-    
-    if gender not in ('男', '女', '其他'):
-        return render_template('form.html', msg="请选择正确的性别")
-    
-    if not contact or len(contact) > 128:
-        return render_template('form.html', msg="联系方式必填，且不超过 128 字符")
-    
-    if not industry or len(industry) > 128:
-        return render_template('form.html', msg="主要从事行业必填，且不超过 128 字符")
-    
-    if not job_role or len(job_role) > 128:
-        return render_template('form.html', msg="职务或角色必填，且不超过 128 字符")
-    
-    if preference_type not in ('RWA投资', 'RWA孵化'):
-        return render_template('form.html', msg="请选择投资偏好类型")
-    
-    # 根据偏好类型验证条件必填字段
-    if preference_type == 'RWA投资' and not investment_preference:
-        return render_template('form.html', msg="选择RWA投资时，投资偏好为必填项")
-    
-    if preference_type == 'RWA孵化' and not incubation_info:
-        return render_template('form.html', msg="选择RWA孵化时，RWA孵化产业及参与资金为必填项")
-    
-    # 验证年龄（选填，但如果填写则需要有效）
-    age = None
-    if age_raw:
-        try:
-            age = int(age_raw)
-            if age < 0 or age > 120:
-                raise ValueError
-        except ValueError:
-            return render_template('form.html', msg="年龄请输入 0–120 的整数")
-
-    # 创建数据库记录
-    lead = Lead(
-        name=name, 
-        gender=gender, 
-        contact=contact,
-        industry=industry,
-        job_role=job_role,
-        preference_type=preference_type,
-        investment_preference=investment_preference if preference_type == 'RWA投资' else None,
-        incubation_info=incubation_info if preference_type == 'RWA孵化' else None,
-        age=age,
-        location=location if location else None,
-        investment_experience=investment_experience if investment_experience else None,
-        tech_adaptability=tech_adaptability if tech_adaptability else None,
-        high_net_worth=high_net_worth if high_net_worth else None,
-        expected_investment=expected_investment if expected_investment else None,
-        ip=get_client_ip(),
-        user_agent=request.headers.get('User-Agent', '')[:255]
-    )
-    db.session.add(lead)
-    db.session.commit()
+    # 分步提交已完成，直接跳转到成功页面
+    return render_template('success.html')
+@app.route('/success', methods=['GET'])
+def success():
     return render_template('success.html')
 
 @app.route('/admin/login', methods=['GET','POST'])
