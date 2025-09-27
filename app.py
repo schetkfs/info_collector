@@ -39,13 +39,23 @@ def submit_step():
     step = data.get('step')
     if not step:
         return jsonify(success=False, msg='缺少step参数')
-    # 第一步新建Lead，保存id到session
+    # 第一步新建Lead，未填写字段保存为空
     if int(step) == 1:
         lead_data = {
             'name': data.get('name', ''),
             'gender': data.get('gender', ''),
             'contact': data.get('contact', ''),
             'age': None,
+            'location': '',
+            'industry': '',
+            'job_role': '',
+            'preference_type': '',
+            'investment_preference': '',
+            'incubation_info': '',
+            'investment_experience': '',
+            'tech_adaptability': '',
+            'high_net_worth': '',
+            'expected_investment': '',
             'ip': get_client_ip(),
             'user_agent': request.headers.get('User-Agent', '')[:255]
         }
@@ -60,6 +70,7 @@ def submit_step():
         db.session.add(lead)
         db.session.commit()
         session['lead_id'] = lead.id
+        session.modified = True
         return jsonify(success=True)
     # 后续步骤更新同一条Lead
     lead_id = session.get('lead_id')
