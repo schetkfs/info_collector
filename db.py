@@ -5,10 +5,23 @@ from flask_sqlalchemy import SQLAlchemy
 
 # 数据库配置 - 使用 instance/data.db
 basedir = os.path.abspath(os.path.dirname(__file__))
+
 instance_dir = os.path.join(basedir, 'instance')
 if not os.path.exists(instance_dir):
-    os.makedirs(instance_dir)
+    try:
+        os.makedirs(instance_dir, exist_ok=True)
+        print(f"已创建数据库目录: {instance_dir}")
+    except Exception as e:
+        print(f"❌ 创建数据库目录失败: {e}")
 database_path = os.path.join(instance_dir, 'data.db')
+# 确保数据库文件可写（首次运行时创建空文件）
+try:
+    if not os.path.exists(database_path):
+        open(database_path, 'a').close()
+        print(f"已创建数据库文件: {database_path}")
+except Exception as e:
+    print(f"❌ 创建数据库文件失败: {e}")
+print(f"数据库文件路径: {database_path}")
 
 # db对象需要在app初始化后绑定
 
