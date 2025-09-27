@@ -85,17 +85,17 @@ systemctl daemon-reload
 systemctl enable --now "${SERVICE_NAME}"
 
 echo "==> 配置 Nginx 站点（HTTP 反代）"
-cat > /etc/nginx/sites-available/${SERVICE_NAME} <<'NGINX'
+cat > /etc/nginx/sites-available/${SERVICE_NAME} <<NGINX
 server {
   listen 80;
   server_name ${DOMAIN};
 
   location / {
     proxy_pass http://127.0.0.1:${APP_PORT};
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Host \$host;
+    proxy_set_header X-Real-IP \$remote_addr;
+    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto \$scheme;
   }
 
   client_max_body_size 2m;
