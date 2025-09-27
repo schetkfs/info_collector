@@ -29,6 +29,64 @@ def get_client_ip():
 def logged_in():
     return session.get('is_admin') is True
 
+
+# 分步提交接口
+from flask import jsonify
+@app.route('/submit_step', methods=['POST'])
+def submit_step():
+    from db import Lead
+    data = request.get_json(force=True)
+    step = data.get('step')
+    if not step:
+        return jsonify(success=False, msg='缺少step参数')
+    # 第一步新建Lead，保存id到session
+    if int(step) == 1:
+        lead_data = {
+            'name': data.get('name', ''),
+            'gender': data.get('gender', ''),
+            'contact': data.get('contact', ''),
+            'age': None,
+            'ip': get_client_ip(),
+            'user_agent': request.headers.get('User-Agent', '')[:255]
+        }
+        if 'age' in data and str(data['age']).strip():
+            try:
+                age_val = int(data['age'])
+                if 0 <= age_val <= 120:
+                    lead_data['age'] = age_val
+            except Exception:
+                pass
+        lead = Lead(**lead_data)
+        db.session.add(lead)
+        db.session.commit()
+        session['lead_id'] = lead.id
+        return jsonify(success=True)
+    # 后续步骤更新同一条Lead
+    lead_id = session.get('lead_id')
+    if not lead_id:
+        return jsonify(success=False, msg='未找到用户记录，请刷新页面重新填写')
+    lead = Lead.query.get(lead_id)
+    if not lead:
+        return jsonify(success=False, msg='用户记录不存在，请刷新页面重新填写')
+    # step 2
+    if int(step) == 2:
+        lead.location = data.get('location', '')
+        lead.industry = data.get('industry', '')
+        lead.job_role = data.get('job_role', '')
+    # step 3
+    if int(step) == 3:
+        lead.preference_type = data.get('preference_type', '')
+        lead.investment_preference = data.get('investment_preference', '')
+        lead.incubation_info = data.get('incubation_info', '')
+        lead.investment_experience = data.get('investment_experience', '')
+        lead.tech_adaptability = data.get('tech_adaptability', '')
+    # step 4
+    if int(step) == 4:
+        lead.high_net_worth = data.get('high_net_worth', '')
+        lead.expected_investment = data.get('expected_investment', '')
+    db.session.commit()
+    return jsonify(success=True)
+
 @app.route('/', methods=['GET'])
 def index():
     return render_template('form.html')
