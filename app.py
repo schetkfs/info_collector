@@ -152,6 +152,7 @@ def admin():
 def export_csv():
     if not logged_in():
         return redirect(url_for('login'))
+    from db import Lead
     si = io.StringIO()
     writer = csv.writer(si)
     writer.writerow([
@@ -159,7 +160,7 @@ def export_csv():
         'investment_preference', 'incubation_info', 'age', 'location', 'investment_experience',
         'tech_adaptability', 'high_net_worth', 'expected_investment', 'ip', 'user_agent', 'created_at'
     ])
-    for x in db.session.query(db.Model).filter_by(__tablename__='lead').order_by(getattr(x, 'created_at').desc()):
+    for x in Lead.query.order_by(Lead.created_at.desc()).all():
         writer.writerow([
             x.id, x.name, x.gender, x.contact, x.industry, x.job_role, x.preference_type,
             x.investment_preference or '', x.incubation_info or '', x.age or '',
