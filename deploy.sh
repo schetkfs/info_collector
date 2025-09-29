@@ -4,7 +4,7 @@
 set -Eeuo pipefail
 
 ########## 可配置变量 ##########
-DOMAIN="rwa.yuansheng.net.cn"
+DOMAIN="rwa.yuansheng.daoguilai.com"
 EMAIL="1254965564@qq.com"         # 用于 Let's Encrypt；开启 HTTPS 时必填
 ENABLE_TLS=0                    # 0 仅 HTTP；1 同时签发 HTTPS 并自动跳转
 
