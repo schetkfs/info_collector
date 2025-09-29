@@ -27,6 +27,7 @@
           <th style="width:80px;">地域</th>
           <th style="width:100px;">来源 IP</th>
           <th style="width:120px;">时间</th>
+          <th style="width:60px;">操作</th>
         </tr>
       </thead>
       <tbody>
@@ -43,6 +44,7 @@
           <td title="{{ x.location if x.location else '' }}">{{ x.location[:8] if x.location else '-' }}{% if x.location and x.location|length > 8 %}...{% endif %}</td>
           <td>{{ x.ip }}</td>
           <td>{{ x.created_at.strftime('%m-%d %H:%M') }}</td>
+          <td><button class="btn" style="padding:4px 10px;font-size:13px;" onclick="deleteUser({{ x.id }})">删除</button></td>
         </tr>
         {% endfor %}
       </tbody>
@@ -58,5 +60,6 @@
       提示：鼠标悬停在省略的内容上可查看完整信息。点击导出CSV可获取所有详细数据。
     </div>
   </div>
+<script src="/static/js/delete_user.js"></script>
 </div>
 {% endblock %}

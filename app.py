@@ -1,3 +1,21 @@
+@app.route('/admin/delete_user', methods=['POST'])
+def delete_user():
+    if not logged_in():
+        return {'success': False, 'msg': '未登录'}, 403
+    from db import Lead
+    data = request.get_json(force=True)
+    user_id = data.get('id')
+    if not user_id:
+        return {'success': False, 'msg': '缺少用户ID'}
+    lead = Lead.query.get(user_id)
+    if not lead:
+        return {'success': False, 'msg': '用户不存在'}
+    try:
+        db.session.delete(lead)
+        db.session.commit()
+        return {'success': True}
+    except Exception as e:
+        return {'success': False, 'msg': str(e)}
 
 import io, csv
 from flask import Flask, request, redirect, url_for, render_template, session, make_response
