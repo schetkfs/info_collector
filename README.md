@@ -42,5 +42,3 @@ cd info_collector
   systemctl restart info-collector
   ```
 - 数据库路径：`/opt/info-collector/data.db`
-
-如遇问题可参考脚本输出提示或联系维护者。

@@ -1,0 +1,15 @@
+如遇问题可参考脚本输出提示或联系维护者。
+git stash && git pull origin && git stash pop stash@{0} && git add . && git commit -m "test" && git push origin（暂存当前代码，拉下云端代码，恢复当前代码，添加修改，提交修改，推送云端代码）
+
+你可以在 ~/.bashrc 里用函数实现带参数的“别名”：
+
+gitpush() {
+  msg="$1"
+  git stash && git pull origin && git stash pop stash@{0} && git add . && git commit -m "$msg" && git push origin
+}
+
+保存后执行 source ~/.bashrc，以后只需运行：
+
+gitpush "你的提交说明"
+
+即可一键完成所有操作
