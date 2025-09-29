@@ -37,8 +37,8 @@ cd info_collector
 - 后台：http://你的域名/admin/login
 - 管理命令：
   ```bash
-  systemctl status info-collector
-  journalctl -u info-collector -f
-  systemctl restart info-collector
+  systemctl status info_collector
+  journalctl -u info_collector -f
+  systemctl restart info_collector
   ```
-- 数据库路径：`/opt/info-collector/data.db`
+- 数据库路径：`/opt/info_collector/data.db`
